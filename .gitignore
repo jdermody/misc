@@ -2,4 +2,9 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/CSharp/ApiTestApp/bin/Debug
+/CSharp/.vs/CSharp/v14/.suo
+/CSharp/ApiTestApp/bin
+/CSharp/ApiTestApp/obj
+/CSharp/obj
+/CSharp/packages
+/CSharp/bin
