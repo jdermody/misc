@@ -1,17 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Media.Media3D;
-using System.Web;
-using System.Xml;
 using System.Windows.Media.Animation;
 using System.Threading.Tasks;
 using BrightWire;
@@ -25,35 +17,35 @@ using System.Collections.ObjectModel;
 
 namespace Search3D
 {
-	public partial class Window1 : System.Windows.Window
-	{
+    public partial class Window1 : Window
+    {
         readonly ObservableCollection<string> _statusMessage = new ObservableCollection<string>();
         readonly ModelViewer.Trackball trackball = new ModelViewer.Trackball();
         SearchResult[] _searchResult = null;
         Cube[] _cube = null;
-		static Color[] COLOUR_LIST = {
-			Color.FromRgb(0xff, 0x90, 0x00),
-			Color.FromRgb(0x62, 0xBA, 0x5B),
-			Color.FromRgb(0xCF, 0x5B, 0x4B),
-			Color.FromRgb(0x78, 0xA9, 0xCC),
-			Color.FromRgb(0xFF, 0xCD, 0x20),
-			Color.FromRgb(0x76, 0x56, 0xB7),
-			Color.FromRgb(0xF2, 0x7F, 0xD8),
-			Color.FromRgb(0x91, 0x96, 0x49),
-			Color.FromRgb(0x4F, 0x90, 0x93),
-			Color.FromRgb(0xAC, 0x76, 0x40),
-		};
-		Cube _currentHilightedCube = null;
+        static Color[] COLOUR_LIST = {
+            Color.FromRgb(0xff, 0x90, 0x00),
+            Color.FromRgb(0x62, 0xBA, 0x5B),
+            Color.FromRgb(0xCF, 0x5B, 0x4B),
+            Color.FromRgb(0x78, 0xA9, 0xCC),
+            Color.FromRgb(0xFF, 0xCD, 0x20),
+            Color.FromRgb(0x76, 0x56, 0xB7),
+            Color.FromRgb(0xF2, 0x7F, 0xD8),
+            Color.FromRgb(0x91, 0x96, 0x49),
+            Color.FromRgb(0x4F, 0x90, 0x93),
+            Color.FromRgb(0xAC, 0x76, 0x40),
+        };
+        Cube _currentHilightedCube = null;
 
-		public Window1()
-		{
-			InitializeComponent();
+        public Window1()
+        {
+            InitializeComponent();
 
-			// setup event handlers
-			this.Loaded += new RoutedEventHandler(Window1_Loaded);
-			myPerspectiveCamera.Transform = trackball.Transform;
-			directionalLight.Transform = trackball.Transform;
-			borderCapture.MouseMove += new MouseEventHandler(_CheckMouseInModel);
+            // setup event handlers
+            this.Loaded += new RoutedEventHandler(Window1_Loaded);
+            myPerspectiveCamera.Transform = trackball.Transform;
+            directionalLight.Transform = trackball.Transform;
+            borderCapture.MouseMove += new MouseEventHandler(_CheckMouseInModel);
             icStatus.ItemsSource = _statusMessage;
 
             Task.Run(() => _AnalyseDataset());
@@ -99,10 +91,9 @@ namespace Search3D
                 Classification = docList.Select(d => d.AsClassification(stringTable)).ToArray()
             };
 
-            // normalise the document/t
+            // create dense feature vectors and normalise along the way
             var encodings = classificationSet.Vectorise(true);
 
-            // convert the sparse feature vectors into dense vectors
             using (var lap = Provider.CreateLinearAlgebra()) {
                 var lookupTable = encodings.Select(d => Tuple.Create(d, lap.Create(d.Data))).ToDictionary(d => d.Item2, d => docTable[d.Item1.Classification]);
                 var vectorList = lookupTable.Select(d => d.Key).ToList();
@@ -114,16 +105,20 @@ namespace Search3D
                     _statusMessage.Add("Performing latent semantic analysis...");
                 });
 
+                // compute the SVD
                 const int K = 3;
                 var kIndices = Enumerable.Range(0, K).ToList();
                 var matrixT = matrix.Transpose();
                 var svd = matrixT.Svd();
 
+                // create latent space
                 var s = lap.CreateDiagonal(svd.S.AsIndexable().Values.Take(K).ToList());
                 var v2 = svd.VT.GetNewMatrixFromRows(kIndices);
                 using (var sv2 = s.Multiply(v2)) {
                     var vectorList2 = sv2.AsIndexable().Columns.ToList();
                     var lookupTable2 = vectorList2.Select((v, i) => Tuple.Create(v, vectorList[i])).ToDictionary(d => (IVector)d.Item1, d => lookupTable[d.Item2]);
+
+                    // cluster the latent space
                     var clusters = vectorList2.KMeans(COLOUR_LIST.Length);
                     var clusterTable = clusters
                         .Select((l, i) => Tuple.Create(l, i))
@@ -131,6 +126,7 @@ namespace Search3D
                         .ToDictionary(d => d.Item1, d => COLOUR_LIST[d.Item2])
                     ;
 
+                    // build the document list
                     var documentList = new List<Document>();
                     int index = 0;
                     double maxX = double.MinValue, minX = double.MaxValue, maxY = double.MinValue, minY = double.MaxValue, maxZ = double.MinValue, minZ = double.MaxValue;
@@ -166,7 +162,7 @@ namespace Search3D
                         _statusMessage.Add("Creating 3D graph...");
 
                         var SCALE = 10;
-                        for(var i = 0; i < numDocs;  i++) {
+                        for (var i = 0; i < numDocs; i++) {
                             var document = documentList[i];
                             var cube = _cube[i] = new Cube(SCALE * document.X, SCALE * document.Y, SCALE * document.Z, i);
                             var searchResult = _searchResult[i] = new SearchResult(document.AAAIDocument, i);
@@ -177,7 +173,7 @@ namespace Search3D
                             viewPort.Children.Add(cube);
                         }
 
-                        foreach(var item in _searchResult.OrderBy(sr => sr.Colour.GetHashCode()))
+                        foreach (var item in _searchResult.OrderBy(sr => sr.Colour.GetHashCode()))
                             panelResults.Children.Add(item);
 
                         icStatus.Visibility = Visibility.Collapsed;
@@ -190,51 +186,51 @@ namespace Search3D
 
 
         void _CheckMouseInModel(object sender, MouseEventArgs e)
-		{
-			// don't bother checking the mouse position if we are dragging
-			if(e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed)
-				return;
+        {
+            // don't bother checking the mouse position if we are dragging
+            if (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed)
+                return;
 
-			// see if the the mouse is over a cube
-			// N.B we are looking at the border as it is superimposed over the viewPort
-			Cube foundCube = null;
-			SearchResult correspondingSearchResult = null;
-			HitTestResult result = VisualTreeHelper.HitTest(viewPort, e.GetPosition(viewPort));
-			RayHitTestResult rayResult = result as RayHitTestResult;
-			if(rayResult != null) {
-				RayMeshGeometry3DHitTestResult rayMeshResult = rayResult as RayMeshGeometry3DHitTestResult;
-				if(rayMeshResult != null) {
-					GeometryModel3D model = rayMeshResult.ModelHit as GeometryModel3D;
-					for(int i = 0, len = _cube.Length; i < len; i++) {
+            // see if the the mouse is over a cube
+            // N.B we are looking at the border as it is superimposed over the viewPort
+            Cube foundCube = null;
+            SearchResult correspondingSearchResult = null;
+            HitTestResult result = VisualTreeHelper.HitTest(viewPort, e.GetPosition(viewPort));
+            RayHitTestResult rayResult = result as RayHitTestResult;
+            if (rayResult != null) {
+                RayMeshGeometry3DHitTestResult rayMeshResult = rayResult as RayMeshGeometry3DHitTestResult;
+                if (rayMeshResult != null) {
+                    GeometryModel3D model = rayMeshResult.ModelHit as GeometryModel3D;
+                    for (int i = 0, len = _cube.Length; i < len; i++) {
                         var item = _cube[i];
-						if(item.Content == model) {
-							foundCube = item;
+                        if (item.Content == model) {
+                            foundCube = item;
                             correspondingSearchResult = _searchResult[i];
                             break;
-						}
-					}
-				}
-			}
+                        }
+                    }
+                }
+            }
 
-			// update the selection as appropriate
-			if(foundCube != _currentHilightedCube) {
-				if(_currentHilightedCube != null)
-					_currentHilightedCube.Reset();
-				if(foundCube != null) {
-					correspondingSearchResult.BringIntoView();
+            // update the selection as appropriate
+            if (foundCube != _currentHilightedCube) {
+                if (_currentHilightedCube != null)
+                    _currentHilightedCube.Reset();
+                if (foundCube != null) {
+                    correspondingSearchResult.BringIntoView();
 
-					SolidColorBrush brush = new SolidColorBrush(Colors.Red);
-					ColorAnimation animation = new ColorAnimation(Colors.Red, Color.FromRgb(0xff, 0xff, 0xff), new Duration(TimeSpan.FromMilliseconds(750)));
-					brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
-					correspondingSearchResult.Background = brush;
-					foundCube.Ping();
-				}
-				_currentHilightedCube = foundCube;
-			}
-		}
+                    SolidColorBrush brush = new SolidColorBrush(Colors.Red);
+                    ColorAnimation animation = new ColorAnimation(Colors.Red, Color.FromRgb(0xff, 0xff, 0xff), new Duration(TimeSpan.FromMilliseconds(750)));
+                    brush.BeginAnimation(SolidColorBrush.ColorProperty, animation);
+                    correspondingSearchResult.Background = brush;
+                    foundCube.Ping();
+                }
+                _currentHilightedCube = foundCube;
+            }
+        }
 
-		void searchResult_MouseHoverEvent(int index, bool hover, Color defaultColour)
-		{
+        void searchResult_MouseHoverEvent(int index, bool hover, Color defaultColour)
+        {
             var cube = _cube[index];
             if (hover)
                 cube.Ping();
@@ -242,9 +238,9 @@ namespace Search3D
                 cube.Colour = defaultColour;
         }
 
-		void Window1_Loaded(object sender, RoutedEventArgs e)
-		{
-			trackball.EventSource = borderCapture;
-		}
-	}
+        void Window1_Loaded(object sender, RoutedEventArgs e)
+        {
+            trackball.EventSource = borderCapture;
+        }
+    }
 }
