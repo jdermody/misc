@@ -1,0 +1,68 @@
+﻿<Window x:Class="NNMFSearchResultClustering.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="NNMF Clustering"
+    >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" BorderThickness="0 0 1 0" SnapsToDevicePixels="True">
+            <Border.BorderBrush>
+                <LinearGradientBrush StartPoint="0.5 0" EndPoint="0.5 1">
+                    <GradientStop Offset="0" Color="#dddddd"/>
+                    <GradientStop Offset="0.5" Color="#666666"/>
+                    <GradientStop Offset="1" Color="#dddddd"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+
+            <DockPanel LastChildFill="True">
+                <DockPanel.Background>
+                    <LinearGradientBrush StartPoint="0 0.5" EndPoint="1 0.5">
+                        <GradientStop Offset="0" Color="#aaaaaa"/>
+                        <GradientStop Offset="1" Color="#ffffff"/>
+                    </LinearGradientBrush>
+                </DockPanel.Background>
+
+                <Grid DockPanel.Dock="Top" Margin="2">
+                    <ItemsControl x:Name="icMessage">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="tagCloudContainer" Orientation="Vertical" Width="Auto">
+                        <StackPanel.Background>
+                            <LinearGradientBrush StartPoint="0 0.5" EndPoint="1 0.5">
+                                <GradientStop Offset="0" Color="#ffffff"/>
+                                <GradientStop Offset="1" Color="#aaaaaa"/>
+                            </LinearGradientBrush>
+                        </StackPanel.Background>
+                    </StackPanel>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False" Width="3" BorderThickness="1" BorderBrush="#aaaaaa" SnapsToDevicePixels="False">
+            <GridSplitter.Background>
+                <LinearGradientBrush StartPoint="0.5 0" EndPoint="0.5 1">
+                    <GradientStop Offset="0" Color="#dddddd"/>
+                    <GradientStop Offset="0.5" Color="#666666"/>
+                    <GradientStop Offset="1" Color="#dddddd"/>
+                </LinearGradientBrush>
+            </GridSplitter.Background>
+        </GridSplitter>
+
+        <ProgressBar x:Name="progressBar" Grid.Column="2" SnapsToDevicePixels="True" IsIndeterminate="True" />
+        <ScrollViewer x:Name="svResults" Grid.Column="2" SnapsToDevicePixels="True" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="panelResults" Orientation="Vertical" />
+        </ScrollViewer>
+    </Grid>
+</Window>

@@ -1,0 +1,65 @@
+﻿<Window x:Class="NNMFSearchResultClustering.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="NNMFSearchResultClustering"
+    >
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="2*"/>
+      </Grid.ColumnDefinitions>
+
+      <Border Grid.Column="0" BorderThickness="0 0 1 0" SnapsToDevicePixels="True">
+        <Border.BorderBrush>
+          <LinearGradientBrush StartPoint="0.5 0" EndPoint="0.5 1">
+            <GradientStop Offset="0" Color="#dddddd"/>
+            <GradientStop Offset="0.5" Color="#666666"/>
+            <GradientStop Offset="1" Color="#dddddd"/>
+          </LinearGradientBrush>
+        </Border.BorderBrush>
+        
+        <DockPanel LastChildFill="True">
+          <DockPanel.Background>
+            <LinearGradientBrush StartPoint="0 0.5" EndPoint="1 0.5">
+              <GradientStop Offset="0" Color="#aaaaaa"/>
+              <GradientStop Offset="1" Color="#ffffff"/>
+            </LinearGradientBrush>
+          </DockPanel.Background>
+          
+          <Grid DockPanel.Dock="Top" Margin="2">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="3*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Margin="5 5 0 5" x:Name="searchTextBox" Grid.Column="0" FontSize="15" FontFamily="Verdana"/>
+            <Button x:Name="searchBtn" Grid.Column="1" Content="Search!" Margin="5" IsEnabled="False" FontFamily="Verdana"/>
+          </Grid>
+          
+          <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="tagCloudContainer" Orientation="Vertical" Width="Auto">
+              <StackPanel.Background>
+                <LinearGradientBrush StartPoint="0 0.5" EndPoint="1 0.5">
+                  <GradientStop Offset="0" Color="#ffffff"/>
+                  <GradientStop Offset="1" Color="#aaaaaa"/>
+                </LinearGradientBrush>
+              </StackPanel.Background>
+            </StackPanel>
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+      
+      <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" ShowsPreview="False" Width="3" BorderThickness="1" BorderBrush="#aaaaaa" SnapsToDevicePixels="False">
+        <GridSplitter.Background>
+          <LinearGradientBrush StartPoint="0.5 0" EndPoint="0.5 1">
+            <GradientStop Offset="0" Color="#dddddd"/>
+            <GradientStop Offset="0.5" Color="#666666"/>
+            <GradientStop Offset="1" Color="#dddddd"/>
+          </LinearGradientBrush>
+        </GridSplitter.Background>
+      </GridSplitter>
+
+      <ProgressBar x:Name="progressBar" Grid.Column="2" SnapsToDevicePixels="True" IsIndeterminate="True" />
+      <Frame x:Name="browserFrame" Grid.Column="2" SnapsToDevicePixels="True" Visibility="Collapsed" />
+    </Grid>
+</Window>

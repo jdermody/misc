@@ -1,0 +1,47 @@
+<Border
+  x:Class="NNMFSearchResultClustering.Cluster"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  SnapsToDevicePixels="True"
+  BorderThickness="2"
+  Margin="0 1 0 0"
+  CornerRadius="3"
+  Padding="5"
+  Cursor="Hand"
+>
+  <Border.Background>
+    <SolidColorBrush Color="#666666" x:Name="backBrush"/>
+  </Border.Background>
+  <Border.BorderBrush>
+    <SolidColorBrush Color="Transparent" x:Name="borderBrush"/>
+  </Border.BorderBrush>
+  <Border.Resources>
+    <Color x:Key="selectionColour">#9999DEFD</Color>
+    <Color x:Key="borderSelectionColour">#999999</Color>
+  </Border.Resources>
+
+  <Border.Triggers>
+    <EventTrigger RoutedEvent="Border.MouseEnter">
+      <BeginStoryboard>
+        <Storyboard>
+          <ColorAnimation Storyboard.TargetProperty="Color" Storyboard.TargetName="backBrush" From="{DynamicResource backColour}" To="{StaticResource selectionColour}" Duration="0:0:0.15"/>
+          <ColorAnimation Storyboard.TargetProperty="Color" Storyboard.TargetName="borderBrush" From="Transparent" To="{StaticResource borderSelectionColour}" Duration="0:0:0.15"/>
+        </Storyboard>
+      </BeginStoryboard>
+    </EventTrigger>
+    <EventTrigger RoutedEvent="Border.MouseLeave">
+      <BeginStoryboard>
+        <Storyboard>
+          <ColorAnimation Storyboard.TargetProperty="Color" Storyboard.TargetName="backBrush" To="{DynamicResource backColour}" From="{StaticResource selectionColour}" Duration="0:0:0.25"/>
+          <ColorAnimation Storyboard.TargetProperty="Color" Storyboard.TargetName="borderBrush" To="Transparent" From="{StaticResource borderSelectionColour}" Duration="0:0:0.25"/>
+        </Storyboard>
+      </BeginStoryboard>
+    </EventTrigger>
+  </Border.Triggers>
+
+  <TextBlock x:Name="textContent" TextWrapping="Wrap" FontFamily="Verdana" FontSize="12" Foreground="#ffffff" Padding="5" SnapsToDevicePixels="True" TextAlignment="Center">
+    <TextBlock.Background>
+      <SolidColorBrush Color="#66666666"/>
+    </TextBlock.Background>
+  </TextBlock>
+</Border>
