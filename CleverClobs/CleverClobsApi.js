@@ -15,7 +15,7 @@ var CleverClobs;
         };
         request.send();
     }
-    function postJson(url, auth, obj, callback, onError) {
+    function postText(url, auth, obj, callback, onError) {
         var request = new XMLHttpRequest();
         request.open("POST", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth);
@@ -28,9 +28,9 @@ var CleverClobs;
         request.onerror = function () {
             onError();
         };
-        request.send(JSON.stringify(obj));
+        request.send(obj);
     }
-    function deleteJson(url, auth, callback, onError) {
+    function sendDelete(url, auth, callback, onError) {
         var request = new XMLHttpRequest();
         request.setRequestHeader("Authorization", "Basic " + auth);
         request.open("DELETE", url, true);
@@ -73,54 +73,54 @@ var CleverClobs;
             getJson(Api.BASE_URL + "job/" + job.id + "/status", this.auth, callback, function () { return fail(callback); });
         };
         Api.prototype.deleteJob = function (job, callback) {
-            deleteJson(Api.BASE_URL + "job/" + job.id, this.auth, callback, function () { return fail(null); });
+            sendDelete(Api.BASE_URL + "job/" + job.id, this.auth, callback, function () { return fail(null); });
         };
         Api.prototype.tokenise = function (text, callback) {
             var _this = this;
             var url = Api.BASE_URL + "job/tokenise";
-            postJson(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
+            postText(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
                 getJson(url + "/" + job.id, _this.auth, function (results) { return callback(results); }, function () { return fail(callback); });
             }); }, function () { return fail(callback); });
         };
         Api.prototype.partsOfSpeech = function (text, callback) {
             var _this = this;
             var url = Api.BASE_URL + "job/pos";
-            postJson(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
+            postText(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
                 getJson(url + "/" + job.id, _this.auth, function (results) { return callback(results); }, function () { return fail(callback); });
             }); }, function () { return fail(callback); });
         };
         Api.prototype.topicDetection = function (text, callback) {
             var _this = this;
             var url = Api.BASE_URL + "job/topicdetection";
-            postJson(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
+            postText(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
                 getJson(url + "/" + job.id, _this.auth, function (results) { return callback(results); }, function () { return fail(callback); });
             }); }, function () { return fail(callback); });
         };
         Api.prototype.embedding = function (text, callback) {
             var _this = this;
             var url = Api.BASE_URL + "job/embedding";
-            postJson(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
+            postText(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
                 getJson(url + "/" + job.id, _this.auth, function (results) { return callback(results); }, function () { return fail(callback); });
             }); }, function () { return fail(callback); });
         };
         Api.prototype.parseSyntax = function (text, callback) {
             var _this = this;
             var url = Api.BASE_URL + "job/syntax";
-            postJson(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
+            postText(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
                 getJson(url + "/" + job.id, _this.auth, function (results) { return callback(results); }, function () { return fail(callback); });
             }); }, function () { return fail(callback); });
         };
         Api.prototype.analyseSentiment = function (text, callback) {
             var _this = this;
             var url = Api.BASE_URL + "job/sentiment";
-            postJson(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
+            postText(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
                 getJson(url + "/" + job.id, _this.auth, function (results) { return callback(results); }, function () { return fail(callback); });
             }); }, function () { return fail(callback); });
         };
         Api.prototype.analyseSemantics = function (text, callback) {
             var _this = this;
             var url = Api.BASE_URL + "job/semantic";
-            postJson(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
+            postText(url, this.auth, text, function (job) { return _this._checkJobStatus(job, function () {
                 getJson(url + "/" + job.id, _this.auth, function (results) { return callback(results); }, function () { return fail(callback); });
             }); }, function () { return fail(callback); });
         };

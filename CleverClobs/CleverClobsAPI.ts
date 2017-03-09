@@ -17,7 +17,7 @@
 
         request.send();
     }
-    function postJson<T>(url: string, auth: string, obj: any, callback: (obj: T) => void, onError: () => void) {
+    function postText<T>(url: string, auth: string, obj: any, callback: (obj: T) => void, onError: () => void) {
         var request = new XMLHttpRequest();
         request.open("POST", url, true);
         request.setRequestHeader("Authorization", "Basic " + auth);
@@ -33,9 +33,9 @@
             onError();
         };
 
-        request.send(JSON.stringify(obj));
+        request.send(obj);
     }
-    function deleteJson(url: string, auth: string, callback: () => void, onError: () => void) {
+    function sendDelete(url: string, auth: string, callback: () => void, onError: () => void) {
         var request = new XMLHttpRequest();
         request.setRequestHeader("Authorization", "Basic " + auth);
         request.open("DELETE", url, true);
@@ -54,7 +54,7 @@
         request.send();
     }
 
-    function fail(callback: (obj:any) => void) {
+    function fail(callback: (obj: any) => void) {
         console.log("There was a problem calling the ICBLD API");
         callback && callback(null);
     }
@@ -90,54 +90,54 @@
         }
 
         public deleteJob(job: Models.JobInfo, callback?: () => void) {
-            deleteJson(Api.BASE_URL + "job/" + job.id, this.auth, callback, () => fail(null));
+            sendDelete(Api.BASE_URL + "job/" + job.id, this.auth, callback, () => fail(null));
         }
 
         public tokenise(text: string, callback: (results: Models.SimpleToken[]) => void) {
             var url = Api.BASE_URL + "job/tokenise";
-            postJson(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
+            postText(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
                 getJson(url + "/" + job.id, this.auth, (results: Models.SimpleToken[]) => callback(results), () => fail(callback));
             }), () => fail(callback));
         }
 
         public partsOfSpeech(text: string, callback: (results: Models.Sentence[]) => void) {
             var url = Api.BASE_URL + "job/pos";
-            postJson(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
+            postText(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
                 getJson(url + "/" + job.id, this.auth, (results: Models.Sentence[]) => callback(results), () => fail(callback));
             }), () => fail(callback));
         }
 
         public topicDetection(text: string, callback: (results: Models.TopicDetectionResults[]) => void) {
             var url = Api.BASE_URL + "job/topicdetection";
-            postJson(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
+            postText(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
                 getJson(url + "/" + job.id, this.auth, (results: Models.TopicDetectionResults[]) => callback(results), () => fail(callback));
             }), () => fail(callback));
         }
 
         public embedding(text: string, callback: (results: Models.WordEmbeddingResults[]) => void) {
             var url = Api.BASE_URL + "job/embedding";
-            postJson(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
+            postText(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
                 getJson(url + "/" + job.id, this.auth, (results: Models.WordEmbeddingResults[]) => callback(results), () => fail(callback));
             }), () => fail(callback));
         }
 
         public parseSyntax(text: string, callback: (results: Models.Token[]) => void) {
             var url = Api.BASE_URL + "job/syntax";
-            postJson(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
+            postText(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
                 getJson(url + "/" + job.id, this.auth, (results: Models.Token[]) => callback(results), () => fail(callback));
             }), () => fail(callback));
         }
 
         public analyseSentiment(text: string, callback: (results: Models.Sentence[]) => void) {
             var url = Api.BASE_URL + "job/sentiment";
-            postJson(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
+            postText(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
                 getJson(url + "/" + job.id, this.auth, (results: Models.Sentence[]) => callback(results), () => fail(callback));
             }), () => fail(callback));
         }
 
         public analyseSemantics(text: string, callback: (results: Models.Token[]) => void) {
             var url = Api.BASE_URL + "job/semantic";
-            postJson(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
+            postText(url, this.auth, text, (job: Models.JobInfo) => this._checkJobStatus(job, () => {
                 getJson(url + "/" + job.id, this.auth, (results: Models.Token[]) => callback(results), () => fail(callback));
             }), () => fail(callback));
         }
