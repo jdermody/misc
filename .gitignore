@@ -15,3 +15,6 @@
 /CodeProject/Search3D/bin
 /CodeProject/Search3D/obj
 /CodeProject/Search3D/packages
+cruise/.cache
+cruise/dist
+cruise/node_modules

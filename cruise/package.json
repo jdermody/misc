@@ -1,0 +1,34 @@
+{
+  "name": "moviedb",
+  "version": "1.0.0",
+  "description": "![Cruisey](https://cdn1.thr.com/sites/default/files/imagecache/scale_crop_768_433/2017/06/risky_business_1983_05_-_h_2017.jpg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jack Dermody",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/enzyme": "^3.9.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
+    "@types/immutable": "^3.8.7",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-redux": "^7.0.9",
+    "@types/redux": "^3.6.0",
+    "cssnano": "^4.1.10",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "less": "^3.9.0",
+    "typescript": "^3.5.1"
+  },
+  "dependencies": {
+    "graphql-request": "^1.8.2",
+    "immutable": "^4.0.0-rc.12",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "redux": "^4.0.1"
+  }
+}
