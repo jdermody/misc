@@ -9,6 +9,9 @@ using System.Windows.Data;
 
 namespace WpfSample.Converters
 {
+    /// <summary>
+    /// Converts from null to a WPF visibility enum
+    /// </summary>
     public class NullToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
