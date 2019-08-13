@@ -1,0 +1,77 @@
+@import (inline) 'reset.css';
+
+@paddingVer: 1rem;
+@paddingHor: 3rem;
+@paddingSmall: 0.5rem;
+@borderRadius: 2px;
+@background: #333;
+
+html, body {
+    background-color: @background;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+article {
+    header {
+        background: linear-gradient(#888, #444);
+        padding:@paddingVer @paddingHor;
+        color:#fff;
+    }
+    form {
+        padding:@paddingVer 0;
+    }
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        max-width: 50em;
+    }
+    label {
+        color:#fff;
+        margin: @paddingSmall @paddingHor;
+        display: block;
+        flex-basis: 35%;
+        >span {
+            font-size:smaller;
+            &.required {
+                color:red;
+                margin-left: 3px;
+            }
+        }
+        input {
+            display: block;
+            margin-top: @paddingSmall;
+            border-radius: @borderRadius;
+            border-width:0;
+            padding: 7px 5px;
+            width:100%;
+        }
+    }
+    input[type="submit"] {
+        background-color: #777;
+        background: linear-gradient(#999, #555);
+        margin: @paddingSmall 0 0 @paddingHor;
+        border-width:0px;
+        padding:@paddingSmall;
+        color:#fff;
+        border-radius: @borderRadius;
+    }
+}
+
+.hero {
+    padding-top: 10%;
+    text-align: center;
+    color:#fff;
+    font-size: x-large;
+    &.error {
+        color: red;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    article {
+        label {
+            flex-basis: 100%;
+        }
+    }
+  }

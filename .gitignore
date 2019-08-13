@@ -21,3 +21,6 @@ cruise/node_modules
 wpf/WpfSample/.vs
 wpf/WpfSample/obj
 wpf/WpfSample/bin
+sca/.next
+sca/node_modules
+.vscode
